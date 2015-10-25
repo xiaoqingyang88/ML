@@ -1,0 +1,133 @@
+---
+title: "MLProject"
+author: "Xiaoqing Yang"
+date: "Sunday, October 25, 2015"
+output: html_document
+---
+
+
+##Introduction
+
+The data used for this project was collected from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lift correctly and incorrectly in 5 differet way. The objective of this project is to create a machine leaning model to classify the barbell lift activity as correct or incorrect based on the data collected from accelerometers. More information is available from the website here: <http://groupware.les.inf.puc-rio.br/har> (see the section on the Weight Lifting Exercise Dataset). 
+
+##Method
+
+Here is the data used for building the model:
+<https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv>
+
+And here is the data for testing the model:
+<https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv>
+
+We first split the data into two datasets: training dataset (60%) and testing dataset (40%).  We used training dataset and trained the model using Random Forest. And then we applied the trained model against the testing dataset and calcluated the ROC and confusionMatrix to evaluate the model. Finally, we used the built model to predict the outcome of the 20 participants in the test dataset.
+
+##
+##Data Preparation
+
+We downloaded the data for model built and data for the testing.
+```{r}
+# read the train and test datasets
+
+modelDataURL <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+testDataURL <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+
+##download.file(modelDataURL, "train.csv", mode="w")
+modelData <- read.csv("train.csv", as.is=TRUE)
+
+##download.file(testDataURL, "test.csv", mode="w")
+testData <- read.csv("test.csv", as.is=TRUE)
+```
+
+Convert new_window and classe to factor.
+```{r}
+# Convert user_name, new_window, classe as factor
+modelData$classe <- as.factor(modelData$classe)
+modelData$new_window <- as.factor(modelData$new_window)
+testData$new_window <- as.factor(testData$new_window)
+```
+
+Drop aggregated columns from the modelData 
+```{r}
+name.list <- names(modelData)
+rm.list <- grep("(^max|^min|^kurtosis|^amplitude|^avg|^var|^skewness|^stddev)", name.list)
+modelData <- modelData[,-rm.list]
+testData <- testData[,-rm.list]
+```
+
+Drop the attributes which are not related to the weight lifting activities, i.e., timestamps,  user_name, X, etc. All these attributes are specific to these datasets and meaningless in general.
+```{r}
+col.list <- 
+  c("user_name", "cvtd_timestamp", "X", "raw_timestamp_part_1", "raw_timestamp_part_2" )
+for (col in col.list) {
+  modelData[,col] <- NULL
+  testData[,col] <- NULL
+}
+```
+
+Here is the size information for both training and testing datasets.
+```{r}
+dim(modelData)
+dim(testData)
+```
+
+Divide the modelData into training (60%) testing (40%) datasets. Training dataset is used to train the model and testing dataset is used to validate the model. 
+```{r}
+library(caret)
+inTrain <- createDataPartition(modelData$classe, p=0.6, list=FALSE)
+train.data <- modelData[inTrain,]
+test.data <- modelData[-inTrain,]
+```
+
+##Model Training
+
+Train the model with Random Forest algorithm and calculate the ROC and confusionMatrix of test data using this model.
+```{r}
+library(randomForest); 
+# Train the model
+model.rf <- randomForest(classe ~ ., data=train.data)
+model.rf
+
+#Display the importance of the prediction variables
+importance(model.rf)
+```
+
+##Model Evaluation
+
+Now, we applied the trained model to the test data:
+```{r}
+predicted <- predict(model.rf,newdata=test.data)
+observed <- test.data$classe
+table(observed, predicted)
+```
+
+And, here is the error rate of the prediction against the test data:
+```{r}
+1-sum(apply(table(observed,predicted),2,max))/length(observed)
+```
+
+##Prediction Using Built Model and Prepare for Sumission
+
+We first do the prediction against the  test data using the trained model""
+```{r}
+#Correct the levels to make it the same as training data
+levels(testData$new_window)  <- c("no", "yes")
+
+#Predict for the test data
+answers = predict(model.rf, newdata=testData)
+```
+
+We now prepare the output for submission:
+```{r}
+#prepare submission files
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+pml_write_files(answers)
+```
+
+##Conclusion
+
+We have split the data into training and testing datasets by 60% over 40%. We have trained the model using Random Forest alogrithm. The error rate for training set is 0.31% and the error rate for testing set is 0.29%. We have also used this model to predict the outcomes of 20 participants from the test data. 
