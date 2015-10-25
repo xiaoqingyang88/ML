@@ -117,11 +117,8 @@ for (col in col.list) {
 <pre><code>## [1] 20 55</code></pre>
 <p>Divide the modelData into training (60%) testing (40%) datasets. Training dataset is used to train the model and testing dataset is used to validate the model.</p>
 <pre class="r"><code>library(caret)</code></pre>
-<pre><code>## Warning: package 'caret' was built under R version 3.1.3</code></pre>
-<pre><code>## Loading required package: lattice</code></pre>
-<pre><code>## Warning: package 'lattice' was built under R version 3.1.3</code></pre>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<pre><code>## Warning: package 'ggplot2' was built under R version 3.1.3</code></pre>
+<pre><code>## Loading required package: lattice
+## Loading required package: ggplot2</code></pre>
 <pre class="r"><code>inTrain &lt;- createDataPartition(modelData$classe, p=0.6, list=FALSE)
 train.data &lt;- modelData[inTrain,]
 test.data &lt;- modelData[-inTrain,]</code></pre>
@@ -130,7 +127,6 @@ test.data &lt;- modelData[-inTrain,]</code></pre>
 <h2>Model Training</h2>
 <p>Train the model with Random Forest algorithm and calculate the ROC and confusionMatrix of test data using this model.</p>
 <pre class="r"><code>library(randomForest); </code></pre>
-<pre><code>## Warning: package 'randomForest' was built under R version 3.1.3</code></pre>
 <pre><code>## randomForest 4.6-10
 ## Type rfNews() to see new features/changes/bug fixes.</code></pre>
 <pre class="r"><code># Train the model
@@ -143,71 +139,71 @@ model.rf</code></pre>
 ##                      Number of trees: 500
 ## No. of variables tried at each split: 7
 ## 
-##         OOB estimate of  error rate: 0.31%
+##         OOB estimate of  error rate: 0.28%
 ## Confusion matrix:
-##      A    B    C    D    E class.error
-## A 3348    0    0    0    0 0.000000000
-## B    7 2271    1    0    0 0.003510312
-## C    0   10 2044    0    0 0.004868549
-## D    0    0   13 1916    1 0.007253886
-## E    0    0    0    4 2161 0.001847575</code></pre>
+##      A    B    C    D    E  class.error
+## A 3347    1    0    0    0 0.0002986858
+## B    7 2272    0    0    0 0.0030715226
+## C    0    7 2045    2    0 0.0043816943
+## D    0    0   14 1916    0 0.0072538860
+## E    0    0    0    2 2163 0.0009237875</code></pre>
 <pre class="r"><code>#Display the importance of the prediction variables
 importance(model.rf)</code></pre>
 <pre><code>##                      MeanDecreaseGini
-## new_window                  0.3621147
-## num_window                783.2730346
-## roll_belt                 680.9477760
-## pitch_belt                376.8437407
-## yaw_belt                  476.6145469
-## total_accel_belt          138.8049530
-## gyros_belt_x               53.0445469
-## gyros_belt_y               62.5099111
-## gyros_belt_z              158.0863575
-## accel_belt_x               77.2691891
-## accel_belt_y               81.6328582
-## accel_belt_z              227.1465738
-## magnet_belt_x             145.5380921
-## magnet_belt_y             223.4136849
-## magnet_belt_z             215.6650451
-## roll_arm                  167.3093829
-## pitch_arm                  93.9260667
-## yaw_arm                   118.5965658
-## total_accel_arm            57.9837371
-## gyros_arm_x                66.8205810
-## gyros_arm_y                67.4154543
-## gyros_arm_z                31.8052059
-## accel_arm_x               147.5463884
-## accel_arm_y                87.8536230
-## accel_arm_z                68.3668112
-## magnet_arm_x              143.5723430
-## magnet_arm_y              126.4829445
-## magnet_arm_z               91.9491398
-## roll_dumbbell             231.6960966
-## pitch_dumbbell             98.3245861
-## yaw_dumbbell              141.5769573
-## total_accel_dumbbell      157.3718636
-## gyros_dumbbell_x           64.7373817
-## gyros_dumbbell_y          125.7143051
-## gyros_dumbbell_z           46.5685837
-## accel_dumbbell_x          147.8859459
-## accel_dumbbell_y          244.7875270
-## accel_dumbbell_z          192.5701084
-## magnet_dumbbell_x         271.8685565
-## magnet_dumbbell_y         386.9880468
-## magnet_dumbbell_z         413.0485015
-## roll_forearm              313.2469110
-## pitch_forearm             411.2255553
-## yaw_forearm                91.8974356
-## total_accel_forearm        52.6084209
-## gyros_forearm_x            44.0868390
-## gyros_forearm_y            66.7560478
-## gyros_forearm_z            43.4121400
-## accel_forearm_x           185.7743967
-## accel_forearm_y            77.1649094
-## accel_forearm_z           136.3963697
-## magnet_forearm_x          122.2745297
-## magnet_forearm_y          118.3294522
-## magnet_forearm_z          152.5580567</code></pre>
+## new_window                  0.3079209
+## num_window                795.8974573
+## roll_belt                 693.0130085
+## pitch_belt                394.4137986
+## yaw_belt                  493.6740666
+## total_accel_belt          147.2016120
+## gyros_belt_x               54.7875498
+## gyros_belt_y               61.1339439
+## gyros_belt_z              155.0858910
+## accel_belt_x               74.2723000
+## accel_belt_y               74.3457325
+## accel_belt_z              222.5800922
+## magnet_belt_x             145.4992846
+## magnet_belt_y             206.3984362
+## magnet_belt_z             214.2521934
+## roll_arm                  175.7512986
+## pitch_arm                  93.1879219
+## yaw_arm                   128.5565985
+## total_accel_arm            53.6042040
+## gyros_arm_x                65.8754951
+## gyros_arm_y                71.5359866
+## gyros_arm_z                31.9582849
+## accel_arm_x               134.1931688
+## accel_arm_y                78.0506162
+## accel_arm_z                69.8879587
+## magnet_arm_x              130.2330563
+## magnet_arm_y              114.5049723
+## magnet_arm_z               85.9793064
+## roll_dumbbell             225.3464759
+## pitch_dumbbell            106.1540959
+## yaw_dumbbell              142.4834869
+## total_accel_dumbbell      162.2494052
+## gyros_dumbbell_x           67.9838170
+## gyros_dumbbell_y          127.3705732
+## gyros_dumbbell_z           44.2403804
+## accel_dumbbell_x          151.3523780
+## accel_dumbbell_y          226.2030002
+## accel_dumbbell_z          190.1203437
+## magnet_dumbbell_x         264.7131323
+## magnet_dumbbell_y         391.9536000
+## magnet_dumbbell_z         414.2236270
+## roll_forearm              303.6274703
+## pitch_forearm             478.8977561
+## yaw_forearm                85.2873589
+## total_accel_forearm        50.3626487
+## gyros_forearm_x            42.4899717
+## gyros_forearm_y            64.3186033
+## gyros_forearm_z            43.5218837
+## accel_forearm_x           174.1544900
+## accel_forearm_y            75.2097705
+## accel_forearm_z           129.6447129
+## magnet_forearm_x          113.1896599
+## magnet_forearm_y          119.0382299
+## magnet_forearm_z          149.2056317</code></pre>
 </div>
 <div id="model-evaluation" class="section level2">
 <h2>Model Evaluation</h2>
@@ -218,13 +214,13 @@ table(observed, predicted)</code></pre>
 <pre><code>##         predicted
 ## observed    A    B    C    D    E
 ##        A 2232    0    0    0    0
-##        B    3 1513    2    0    0
-##        C    0    5 1363    0    0
-##        D    0    0   17 1268    1
-##        E    0    0    0    6 1436</code></pre>
+##        B    1 1515    2    0    0
+##        C    0    4 1364    0    0
+##        D    0    0   12 1273    1
+##        E    0    0    0    5 1437</code></pre>
 <p>And, here is the error rate of the prediction against the test data:</p>
 <pre class="r"><code>1-sum(apply(table(observed,predicted),2,max))/length(observed)</code></pre>
-<pre><code>## [1] 0.004333418</code></pre>
+<pre><code>## [1] 0.003186337</code></pre>
 </div>
 <div id="prediction-using-built-model-and-prepare-for-sumission" class="section level2">
 <h2>Prediction Using Built Model and Prepare for Sumission</h2>

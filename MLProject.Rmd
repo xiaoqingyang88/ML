@@ -70,7 +70,7 @@ dim(testData)
 ```
 
 Divide the modelData into training (60%) testing (40%) datasets. Training dataset is used to train the model and testing dataset is used to validate the model. 
-```{r}
+```{r warning=FALSE}
 library(caret)
 inTrain <- createDataPartition(modelData$classe, p=0.6, list=FALSE)
 train.data <- modelData[inTrain,]
@@ -80,7 +80,7 @@ test.data <- modelData[-inTrain,]
 ##Model Training
 
 Train the model with Random Forest algorithm and calculate the ROC and confusionMatrix of test data using this model.
-```{r}
+```{r warning=FALSE}
 library(randomForest); 
 # Train the model
 model.rf <- randomForest(classe ~ ., data=train.data)
